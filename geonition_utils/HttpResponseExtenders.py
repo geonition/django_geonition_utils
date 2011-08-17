@@ -10,7 +10,7 @@ class HttpResponseUnauthorized(HttpResponse):
 
     def __init__(self, message):
         HttpResponse.__init__(self, message, status=401)
-        self['WWW-Authenticate'] = 'Basic realm="%s"' % Site.objects.get_current().name
+        #self['WWW-Authenticate'] = 'OAuth realm="%s"' % Site.objects.get_current().name
 
 class HttpResponseConflict(HttpResponse):
     
