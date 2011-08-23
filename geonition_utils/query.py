@@ -1,7 +1,6 @@
 from django.db.models.query import QuerySet
 from pymongo import Connection
-
-import settings
+from django.conf import settings
 
 class MongoDBQuerySet(QuerySet):
     """

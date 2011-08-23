@@ -1,8 +1,7 @@
 from pymongo import Connection
 from django.db.models import Manager
 from query import MongoDBQuerySet
-
-import settings
+from django.conf import settings
 
 class MongoDBManager(Manager):
     """
