@@ -13,10 +13,8 @@ class MongoDBManager(Manager):
 
     used_for_related_fields = True
     
-    
     def __init__(self, collection_name = 'collection'):
         super(MongoDBManager, self).__init__()
-        
         self.collection_name = collection_name
         
     def get_query_set(self):
@@ -40,10 +38,13 @@ class MongoDBManager(Manager):
         #get connection values from settings
         database_host = getattr(settings, "MONGODB_HOST", 'localhost')
         database_port = getattr(settings, "MONGODB_PORT", 27017)
-        database_name = getattr(settings, "MONGODB_DBNAME", 'softgis')
-
+        database_name = getattr(settings, "MONGODB_DBNAME", 'geonition')
+        database_username = getattr(settings, "MONGODB_USERNAME", '')
+        database_password = getattr(settings, "MONGODB_PASSWORD", '')
+        
         self.connection = Connection(database_host, database_port)
         self.database = self.connection[database_name]
+        self.database.authenticate(database_username, database_password)
         self.collection = self.database[self.collection_name]
         
     def _disconnect(self):
