@@ -16,7 +16,7 @@ class MongoDBQuerySet(QuerySet):
         self.database = None
         self.collection = None
         self.is_connected = False
-        self.collection_name = collection_name
+        self.collection = collection_name
         
         self._connect()
     
@@ -43,11 +43,14 @@ class MongoDBQuerySet(QuerySet):
         #get connection values from settings
         database_host = getattr(settings, "MONGODB_HOST", 'localhost')
         database_port = getattr(settings, "MONGODB_PORT", 27017)
-        database_name = getattr(settings, "MONGODB_DBNAME", 'softgis')
-
+        database_name = getattr(settings, "MONGODB_DBNAME", 'geonition')
+        database_username = getattr(settings, "MONGODB_USERNAME", '')
+        database_password = getattr(settings, "MONGODB_PASSWORD", '')
+        
         self.connection = Connection(database_host, database_port)
         self.database = self.connection[database_name]
-        self.collection = self.database[self.collection_name]
+        self.database.authenticate(database_username, database_password)
+        self.collection = self.database[self.collection]
         self.is_connected = True
     
     def _disconnect(self):
