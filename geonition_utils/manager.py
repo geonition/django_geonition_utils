@@ -13,18 +13,14 @@ class MongoDBManager(Manager):
 
     used_for_related_fields = True
     
-    def __init__(self, collection_name = 'collection'):
-        super(MongoDBManager, self).__init__()
-        self.collection_name = collection_name
-        
-    def get_query_set(self):
+    def get_query_set(self, collection='collection'):
         return MongoDBQuerySet(self.model,
                                using=self._db,
-                               collection_name=self.collection_name)
+                               collection_name=collection)
 
     #general connect and disconnect functions
     def _connect(self,
-                collection_name = 'collection'):
+                collection = 'collection'):
         """
         This function connects to MongoDB as set in
         the settings.py file.
@@ -45,7 +41,7 @@ class MongoDBManager(Manager):
         self.connection = Connection(database_host, database_port)
         self.database = self.connection[database_name]
         self.database.authenticate(database_username, database_password)
-        self.collection = self.database[self.collection_name]
+        self.collection = self.database[collection]
         
     def _disconnect(self):
         """
@@ -54,23 +50,23 @@ class MongoDBManager(Manager):
         self.connection.disconnect()
         
     #MongoDB insert functions and update functions
-    def save(self, json_dict, identifier):
+    def save(self, json_dict, identifier, collection='collection'):
         """
         This function saves the jsondict and gives
         it the given identifier.
         """
-        self._connect(collection_name=self.collection_name)
+        self._connect(collection=collection)
         json_dict['_id'] = int(identifier)
         self.collection.save(json_dict)
         self._disconnect()
     
     #MongoDB remove functions
-    def remove(self, identifier):
+    def remove(self, identifier, collection='collection'):
         """
         This functions removes the document with the given
         identifier from the collection.
         """
-        self._connect(collection_name=self.collection_name)
+        self._connect(collection_name=collection)
         self.collection.remove(identifier)
         self._disconnect()
         
