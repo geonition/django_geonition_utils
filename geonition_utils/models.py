@@ -24,7 +24,7 @@ class JSON(models.Model):
             JSON.mongodb.save(insert_json, self.id)
     
     def delete(self, *args, **kwargs):
-        super(JSON, self).save(*args, **kwargs)
+        super(JSON, self).delete(*args, **kwargs)
         
         #do nothing if USE_MONGODB False
         if getattr(settings, "USE_MONGODB", False):
@@ -46,5 +46,13 @@ class TimeDModel(models.Model):
     """
     create_time = models.DateTimeField(auto_now_add=True)
     expire_time = models.DateTimeField(null=True)
+    
+    def delete(self, *args, **kwargs):
+        self.expire_time = datetime.today()
+        
+        super(TimeDModel, self).save(*args, **kwargs)
+        
+    
+        
     
     

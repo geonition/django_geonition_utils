@@ -56,32 +56,47 @@ class JSONModelTest(TestCase):
             self.assertEquals(len(result),
                               2,
                               "querying with no input does not return 2 json objects")
+            
             result = JSON.mongodb.find({})
             self.assertEquals(len(result),
                               2,
                               "querying with '{}' does not return 2 json objects")
+            
             result = JSON.mongodb.find({"id": 1})
             self.assertEquals(result[0].json(),
                               self.test_json_1,
                               "query with id did not return the right object")
+            
             result = JSON.mongodb.find({"id": 2})
             self.assertEquals(result[0].json(),
                               self.test_json_2,
                               "query with id did not return the right object")
+            
             result = JSON.mongodb.find({"boolean": True})
             self.assertEquals(result[0].json()["boolean"],
                               True,
                               "query with boolean did not return correct result")
+            
             result = JSON.mongodb.find({"boolean": False})
             self.assertEquals(result[0].json()["boolean"],
                               False,
                               "query with boolean did not return correct result")
+            
             result = JSON.mongodb.find({"object": {"nested": False}})
             self.assertEquals(result[0].json()["object"],
                               {"nested": False},
                               "query a nested object did not return the right result")
+            
             result = JSON.mongodb.find({"array": ["no", "yes"]})
             self.assertEquals(result[0].json()["array"],
                               ["no", "yes"],
                               "query a array did not return the right object")
+            
+            result = JSON.mongodb.find_range('number', 0, 1)
+            self.assertLessEqual(result[0].json()["number"],
+                                 1.1,
+                                 "querying with no input does not return 2 json objects")
+            self.assertGreaterEqual(result[0].json()["number"],
+                                    -0.1,
+                                    "querying with no input does not return 2 json objects")
             
