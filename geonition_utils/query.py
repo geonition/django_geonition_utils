@@ -8,9 +8,15 @@ class MongoDBQuerySet(QuerySet):
     """
     
     ### Methods overloaded from QuerySet ###
-    def __init__(self, model=None, query=None, using=None, collection_name='collection'):
+    def __init__(self,
+                 model=None,
+                 query=None,
+                 using=None,
+                 collection_name='collection'):
         
-        super(MongoDBQuerySet, self).__init__(model=model, query=query, using=using)
+        super(MongoDBQuerySet, self).__init__(model=model,
+                                              query=query,
+                                              using=using)
         
         self.connection = None
         self.database = None
