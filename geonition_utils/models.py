@@ -38,7 +38,7 @@ class JSON(models.Model):
     
     
     
-class TimeDModel(models.Model):
+class TimeD(models.Model):
     """
     This model brings functionality to
     query data that was 'valid' or
@@ -47,12 +47,24 @@ class TimeDModel(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     expire_time = models.DateTimeField(null=True)
     
-    def delete(self, *args, **kwargs):
+    def expire(self):
         self.expire_time = datetime.today()
         
-        super(TimeDModel, self).save(*args, **kwargs)
+        super(TimeD, self).save()
         
     
+    def valid(self, time):
+        """
+        This function tests if this object was valid
+        during the given time.
+        """
+        if self.create_time <= time:
+            if self.expire_time == None:
+                return True
+            elif self.expire_time >= time:
+                return True
+            else:
+                return False
         
     
     
