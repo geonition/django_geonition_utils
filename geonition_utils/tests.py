@@ -6,6 +6,8 @@ from django.conf import settings
 from django.utils import simplejson as json
 from django.contrib.auth.models import User
 from models import JSON
+from models import TimeD
+from datetime import datetime
 
 class JSONModelTest(TestCase):
     """
@@ -47,8 +49,20 @@ class JSONModelTest(TestCase):
         json_mo2.save()
     
     def test_mongodb(self):
+        # next version 1.4 of django supports changing settings in tests
+        # modify this test to use USE_MONGODB=False
+        # and then back to settings value
         
-        #test queries only if mongodb is in use
+        #simple tests when mongodb is not in use
+        result = JSON.mongodb.filter(collection='test')
+        self.assertEquals(len(result),
+                          2,
+                          "Querying for collection 'test' does not return"
+                          "2 results")
+        
+        
+        
+        #test key value queries only if mongodb is in use
         if getattr(settings, "USE_MONGODB", False):
             
             #query with empty
@@ -99,4 +113,18 @@ class JSONModelTest(TestCase):
             self.assertGreaterEqual(result[0].json()["number"],
                                     -0.1,
                                     "querying with no input does not return 2 json objects")
-            
+    
+    def test_timed_model(self):
+        before_create_time = datetime.today()
+        time = TimeD()
+        time.save()
+        valid_time = datetime.today()
+        time.expire()
+        time.save()
+        after_expire_time = datetime.today()
+        
+        self.assertFalse(time.valid(before_create_time))
+        self.assertTrue(time.valid(valid_time))
+        self.assertFalse(time.valid(after_expire_time))
+        
+        
