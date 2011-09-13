@@ -14,9 +14,19 @@ class MongoDBManager(Manager):
     used_for_related_fields = True
     
     def get_query_set(self, collection='collection'):
-        return MongoDBQuerySet(self.model,
-                               using=self._db,
-                               collection_name=collection)
+        """
+        To make the manger more fale safe this function
+        returns a normal django queryset if mongodb is
+        not in use.
+        """
+        if getattr(settings, "USE_MONGODB", False):
+            return MongoDBQuerySet(self.model,
+                                   using=self._db,
+                                   collection_name=collection)
+        else:
+            #return a django QuerySet if MongoDB not in use
+            return super(MongoDBManager, self).get_query_set()
+        
 
     #general connect and disconnect functions
     def _connect(self,
