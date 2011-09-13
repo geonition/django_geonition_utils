@@ -46,7 +46,7 @@ class JSONModelTest(TestCase):
                         json_string=json.dumps(self.test_json_2))
         json_mo2.save()
     
-    def test_query(self):
+    def test_mongodb(self):
         
         #test queries only if mongodb is in use
         if getattr(settings, "USE_MONGODB", False):
