@@ -32,7 +32,18 @@ class UtilsTest(TestCase):
         self.test_json_2 = {
             "id": 2,
             "some_key": "some_value and other text",
-            "number": 1,
+            "number": 0,
+            "boolean": True,
+            "null": None,
+            "object": {
+                "nested": False
+            },
+            "array": ["no","yes"]    
+        }
+        self.test_json_3 = {
+            "id": 3,
+            "some_key": "some_value and other text",
+            "number": 3,
             "boolean": True,
             "null": None,
             "object": {
@@ -80,39 +91,50 @@ class UtilsTest(TestCase):
             self.assertEquals(result[0].json(),
                               self.test_json_1,
                               "query with id did not return the right object")
+            self.assertEquals(len(result),
+                              1,
+                              "The query returned too many objects")
             
             result = JSON.mongodb.find({"id": 2})
             self.assertEquals(result[0].json(),
                               self.test_json_2,
                               "query with id did not return the right object")
+            self.assertEquals(len(result),
+                              1,
+                              "The query returned too many objects")
             
             result = JSON.mongodb.find({"boolean": True})
-            self.assertEquals(result[0].json()["boolean"],
-                              True,
-                              "query with boolean did not return correct result")
+            for obj in result:                
+                self.assertEquals(obj.json()["boolean"],
+                                  True,
+                                  "query with boolean did not return correct result")
             
             result = JSON.mongodb.find({"boolean": False})
-            self.assertEquals(result[0].json()["boolean"],
-                              False,
-                              "query with boolean did not return correct result")
+            for obj in result:
+                self.assertEquals(obj.json()["boolean"],
+                                  False,
+                                  "query with boolean did not return correct result")
             
             result = JSON.mongodb.find({"object": {"nested": False}})
-            self.assertEquals(result[0].json()["object"],
-                              {"nested": False},
-                              "query a nested object did not return the right result")
+            for obj in result:
+                self.assertEquals(obj.json()["object"],
+                                  {"nested": False},
+                                  "query a nested object did not return the right result")
             
             result = JSON.mongodb.find({"array": ["no", "yes"]})
-            self.assertEquals(result[0].json()["array"],
-                              ["no", "yes"],
-                              "query a array did not return the right object")
+            for obj in result:
+                self.assertEquals(obj.json()["array"],
+                                  ["no", "yes"],
+                                  "query a array did not return the right object")
             
             result = JSON.mongodb.find_range('number', 0, 1)
-            self.assertLessEqual(result[0].json()["number"],
-                                 1.1,
-                                 "querying with no input does not return 2 json objects")
-            self.assertGreaterEqual(result[0].json()["number"],
-                                    -0.1,
-                                    "querying with no input does not return 2 json objects")
+            for obj in result:
+                self.assertLessEqual(obj.json()["number"],
+                                     1.1,
+                                     "Range query did not work correctly")
+                self.assertGreaterEqual(obj.json()["number"],
+                                        -0.1,
+                                        "Range query did not work correctly")
     
     def test_timed_model(self):
         before_create_time = datetime.today()
