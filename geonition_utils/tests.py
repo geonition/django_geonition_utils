@@ -9,10 +9,10 @@ from models import JSON
 from models import TimeD
 from datetime import datetime
 
-class JSONModelTest(TestCase):
+class UtilsTest(TestCase):
     """
-    This test tests the functionality of
-    the JSON model
+    Tests the functionality of
+    the utils.
     """
     
     def setUp(self):
