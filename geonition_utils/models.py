@@ -31,6 +31,10 @@ class JSON(models.Model):
             JSON.mongodb.remove(self.id)
       
     def json(self):
+        """
+        This function returns a dict representation
+        of itself
+        """
         return json.loads(self.json_string)
         
     def __unicode__(self):
