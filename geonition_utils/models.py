@@ -10,7 +10,7 @@ class JSON(models.Model):
     for json text field to query key value
     pairs.
     """
-    collection = models.CharField(max_length=20)
+    collection = models.CharField(max_length=30)
     json_string = models.TextField()
     
     mongodb = MongoDBManager()
