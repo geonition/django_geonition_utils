@@ -53,6 +53,7 @@ class TimeD(models.Model):
     
     def expire(self):
         self.expire_time = datetime.today()
+        self.save()
     
     def valid(self, time):
         """
