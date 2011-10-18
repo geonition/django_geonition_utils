@@ -52,12 +52,12 @@ class UtilsTest(TestCase):
             "array": ["no","yes"]    
         }
         
-        json_mo1 = JSON(collection='test',
+        self.json_mo1 = JSON(collection='test',
                         json_string=json.dumps(self.test_json_1))
-        json_mo1.save()
-        json_mo2 = JSON(collection='test',
+        self.json_mo1.save()
+        self.json_mo2 = JSON(collection='test',
                         json_string=json.dumps(self.test_json_2))
-        json_mo2.save()
+        self.json_mo2.save()
     
     def test_mongodb(self):
         # next version 1.4 of django supports changing settings in tests
@@ -136,6 +136,33 @@ class UtilsTest(TestCase):
                                         -0.1,
                                         "Range query did not work correctly")
     
+    def test_json_model(self):
+        
+        #test really long json, try to reproduce the index error
+        json_dict = {}
+        for i in range(7000):
+            json_dict[str(i)] = "some string"
+            
+        json_str = json.dumps(json_dict)
+        json_obj = JSON(collection='test',
+                        json_string=json_str)
+        json_obj.save()
+        
+        # test the supported fields of one json
+        fields = self.json_mo1.get_fields()
+        
+        self.assertEquals(fields,
+                          {u'object': 'object',
+                           u'some_key': u'some_value',
+                           u'object.nested': True,
+                           u'number': 'number',
+                           u'boolean': False,
+                           u'array': 'array',
+                           u'null': None,
+                           u'id': 'number'},
+                          "The get_fields function did not return the correct "
+                          "result")       
+        
     def test_timed_model(self):
         before_create_time = datetime.today()
         time = TimeD()
@@ -148,5 +175,4 @@ class UtilsTest(TestCase):
         self.assertFalse(time.valid(before_create_time))
         self.assertTrue(time.valid(valid_time))
         self.assertFalse(time.valid(after_expire_time))
-        
         

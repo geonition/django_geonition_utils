@@ -1,8 +1,11 @@
+from datetime import datetime
 from django.db import models
 from django.conf import settings
 from django.utils import simplejson as json
+from geonition_utils.json import get_value_types
 from manager import MongoDBManager
-from datetime import datetime
+
+import types
 
 class JSON(models.Model):
     """
@@ -36,6 +39,21 @@ class JSON(models.Model):
         of itself
         """
         return json.loads(self.json_string)
+    
+    def get_fields(self):
+        """
+        This function returns a dict where the key
+        is the field name and the value the type of
+        the field, the type of the field is described
+        with the help of input types in html 5 specification.
+        
+        This function shows the key value type of one
+        JSON
+        """
+        json_dict = json.loads(self.json_string)
+        fields_dict = get_value_types(json_dict)
+        
+        return fields_dict
         
     def __unicode__(self):
         return self.json_string
@@ -68,5 +86,7 @@ class TimeD(models.Model):
             else:
                 return False
         
-    
+    def get_fields(self):
+        return {'time.create_time': 'string',
+                'time.expire_time': 'string'}
     
