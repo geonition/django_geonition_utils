@@ -51,6 +51,16 @@ class HttpResponseNotFound(DjangoHttpResponse):
                                     status=404,
                                     content_type='application/json')
 
+
+#409
+class HttpResponseConflict(DjangoHttpResponse):
+    
+    def __init__(self, message):
+        DjangoHttpResponse.__init__(self,
+                                    message_to_json(message),
+                                    status=409,
+                                    content_type='application/json')
+        
         
 class HttpResponseUnauthorized(DjangoHttpResponse):
     """
