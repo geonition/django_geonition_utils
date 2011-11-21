@@ -35,6 +35,12 @@ class RequestHandler(View):
         This method should be overridden
         """
         return HttpResponseNotImplemented("not implemented, yet!")
+        
+    def options(self, request, *args, **kwargs):
+        """
+        This method should be overridden
+        """
+        return HttpResponseNotImplemented("not implemented, yet!")
 
         
         
