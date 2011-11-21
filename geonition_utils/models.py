@@ -39,7 +39,29 @@ class JSON(models.Model):
         of itself
         """
         return json.loads(self.json_string)
+        
+    def get(self, key, default=None):
+        try:
+            return json.loads(self.json_string).get(key, default)
+        except KeyError:
+            return default
     
+    def remove_values(self, keys):
+        """
+        This function takes an array of keys and
+        removes them from the json string and
+        saves the object
+        """
+        json_dict = json.loads(self.json_string)
+        
+        for key in keys:
+            try:
+                del json_dict[key]
+            except KeyError:
+                pass
+        
+        self.save()
+        
     def get_fields(self):
         """
         This function returns a dict where the key
@@ -57,7 +79,6 @@ class JSON(models.Model):
         
     def __unicode__(self):
         return self.json_string
-    
     
     
 class TimeD(models.Model):
