@@ -6,7 +6,7 @@ from geonition_utils.json import get_value_types
 from manager import MongoDBManager
 
 import types
-
+    
 class JSON(models.Model):
     """
     This model provides mongodb extensions
@@ -24,7 +24,9 @@ class JSON(models.Model):
         #do nothing if USE_MONGODB False
         if getattr(settings, "USE_MONGODB", False):
             insert_json = json.loads(self.json_string)
-            JSON.mongodb.save(insert_json, self.id)
+            JSON.mongodb.save(insert_json,
+                              self.id,
+                              collection = self.collection)
     
     def delete(self, *args, **kwargs):
         super(JSON, self).delete(*args, **kwargs)
@@ -39,7 +41,9 @@ class JSON(models.Model):
         of itself
         """
         return json.loads(self.json_string)
-        
+     
+    #TODO change the name of this function to something more descriptive
+    # get conflicts with model get function
     def get(self, key, default=None):
         try:
             return json.loads(self.json_string).get(key, default)

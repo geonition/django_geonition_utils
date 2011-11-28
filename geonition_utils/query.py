@@ -82,6 +82,13 @@ class MongoDBQuerySet(QuerySet):
                 ids.append(json_obj['_id'])
         
         return super(MongoDBQuerySet, self).filter(id__in = ids)
+    
+    def find_exact(self, key, value):
+        """
+        This function will retrieve all entries that
+        has the key with the exact value of value
+        """
+        return self.find({key: value})
         
     def find_range(self, key, min, max):
         """
@@ -90,4 +97,17 @@ class MongoDBQuerySet(QuerySet):
         """
         return self.find({key: {"$gte": min, "$lte": max}})
         
+    def find_min(self, key, min):
+        """
+        This function finds the entries that key is at
+        minumum min
+        """
+        return self.find({key: {"$gte": min}})
+        
+    def find_max(self, key, max):
+        """
+        This function finds the entries that key is at
+        maximum max
+        """
+        return self.find({key: {"$lte": max}})
         
