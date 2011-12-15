@@ -63,7 +63,8 @@ class JSON(models.Model):
                 del json_dict[key]
             except KeyError:
                 pass
-        
+            
+        self.json_string = json.dumps(json_dict)
         self.save()
         
     def get_fields(self):
