@@ -80,7 +80,6 @@ class MongoDBQuerySet(QuerySet):
         for json_obj in mdb_cursor:
             if(json_obj != None):
                 ids.append(json_obj['_id'])
-        
         return super(MongoDBQuerySet, self).filter(id__in = ids)
     
     def find_exact(self, key, value):

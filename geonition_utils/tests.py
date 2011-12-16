@@ -71,23 +71,21 @@ class UtilsTest(TestCase):
                           "Querying for collection 'test' does not return"
                           "2 results")
         
-        
-        
         #test key value queries only if mongodb is in use
         if getattr(settings, "USE_MONGODB", False):
             
             #query with empty
-            result = JSON.mongodb.find()
+            result = JSON.mongodb.find(collection='test')
             self.assertEquals(len(result),
                               2,
                               "querying with no input does not return 2 json objects")
             
-            result = JSON.mongodb.find({})
+            result = JSON.mongodb.find(collection='test')
             self.assertEquals(len(result),
                               2,
                               "querying with '{}' does not return 2 json objects")
             
-            result = JSON.mongodb.find({"id": 1})
+            result = JSON.mongodb.find({"id": 1}, collection='test')
             self.assertEquals(result[0].json(),
                               self.test_json_1,
                               "query with id did not return the right object")
@@ -95,7 +93,7 @@ class UtilsTest(TestCase):
                               1,
                               "The query returned too many objects")
             
-            result = JSON.mongodb.find({"id": 2})
+            result = JSON.mongodb.find({"id": 2}, collection='test')
             self.assertEquals(result[0].json(),
                               self.test_json_2,
                               "query with id did not return the right object")
@@ -103,31 +101,31 @@ class UtilsTest(TestCase):
                               1,
                               "The query returned too many objects")
             
-            result = JSON.mongodb.find({"boolean": True})
+            result = JSON.mongodb.find({"boolean": True}, collection='test')
             for obj in result:                
                 self.assertEquals(obj.json()["boolean"],
                                   True,
                                   "query with boolean did not return correct result")
             
-            result = JSON.mongodb.find({"boolean": False})
+            result = JSON.mongodb.find({"boolean": False}, collection='test')
             for obj in result:
                 self.assertEquals(obj.json()["boolean"],
                                   False,
                                   "query with boolean did not return correct result")
             
-            result = JSON.mongodb.find({"object": {"nested": False}})
+            result = JSON.mongodb.find({"object": {"nested": False}}, collection='test')
             for obj in result:
                 self.assertEquals(obj.json()["object"],
                                   {"nested": False},
                                   "query a nested object did not return the right result")
             
-            result = JSON.mongodb.find({"array": ["no", "yes"]})
+            result = JSON.mongodb.find({"array": ["no", "yes"]}, collection='test')
             for obj in result:
                 self.assertEquals(obj.json()["array"],
                                   ["no", "yes"],
                                   "query a array did not return the right object")
             
-            result = JSON.mongodb.find_range('number', 0, 1)
+            result = JSON.mongodb.find_range('number', 0, 1, collection='test')
             for obj in result:
                 self.assertLessEqual(obj.json()["number"],
                                      1.1,

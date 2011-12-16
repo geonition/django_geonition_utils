@@ -12,7 +12,7 @@ class MongoDBManager(Manager):
     """
 
     used_for_related_fields = True
-    
+        
     def get_query_set(self, collection='collection'):
         """
         To make the manger more fale safe this function
@@ -67,7 +67,7 @@ class MongoDBManager(Manager):
         """
         self._connect(collection=collection)
         json_dict['_id'] = int(identifier)
-        self.collection.save(json_dict)
+        id = self.collection.save(json_dict)
         self._disconnect()
     
     #MongoDB remove functions
@@ -81,11 +81,11 @@ class MongoDBManager(Manager):
         self._disconnect()
         
     #MongoDB query
-    def find(self, spec=None):
-        return self.get_query_set().find(spec)
+    def find(self, spec=None, collection='collection'):
+        return self.get_query_set(collection=collection).find(spec)
         
-    def find_range(self, key, min, max):
-        return self.find({key: {"$gte": min, "$lte": max}})
+    def find_range(self, key, min, max, collection='collection'):
+        return self.find({key: {"$gte": min, "$lte": max}}, collection=collection)
 
 
         
