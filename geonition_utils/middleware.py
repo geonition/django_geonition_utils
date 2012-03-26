@@ -1,10 +1,10 @@
 import re
 
+from django.conf import settings
 from django.utils.text import compress_string
 from django.utils.cache import patch_vary_headers
-
-from django import http
-from django.conf import settings
+from http import HttpResponseBadRequest
+from http import HttpResponse
 
 XS_SHARING_ALLOWED_ORIGINS = getattr(settings, "XS_SHARING_ALLOWED_ORIGINS", [])
 XS_SHARING_ALLOWED_METHODS = getattr(settings, "XS_SHARING_ALLOWED_METHODS", [])
@@ -17,7 +17,7 @@ class CrossSiteAccessMiddleware(object):
     def process_request(self, request):
 
         if 'HTTP_ACCESS_CONTROL_REQUEST_METHOD' in request.META:
-            response = http.HttpResponse()
+            response = HttpResponse()
             response['Access-Control-Allow-Origin'] = ",".join( XS_SHARING_ALLOWED_ORIGINS )
             response['Access-Control-Allow-Methods'] = ",".join( XS_SHARING_ALLOWED_METHODS )
             response['Access-Control-Allow-Headers'] = ",".join( XS_SHARING_ALLOWED_HEADERS )
@@ -46,3 +46,16 @@ class PreventCacheMiddleware(object):
         response['Expires'] = '0'
 
         return response
+
+class RESTExceptionMiddleware(object):
+    """
+    This middleware handles exception thrown by the
+    REST interface. The Exceptions are transformed to
+    JSON responses with an appropriate http code.
+    
+    This middleware should only be used with REST where
+    you do not want requests to get 500 error messages but
+    some more usefull error messages.
+    """
+    def process_exception(self, request, exception):
+        return HttpResponseBadRequest(exception.message)
