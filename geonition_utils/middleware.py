@@ -40,7 +40,7 @@ class CrossSiteAccessMiddleware(object):
 class PreventCacheMiddleware(object):
 
     def process_response(self, request, response):
-
+        
         response['Pragma'] = 'no-cache'
         response['Cache-Control'] = 'max-age=0,no-cache,no-store,post-check=0,pre-check=0'
         response['Expires'] = '0'

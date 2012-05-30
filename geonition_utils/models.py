@@ -115,4 +115,7 @@ class TimeD(models.Model):
     def get_fields(self):
         return {'time.create_time': 'string',
                 'time.expire_time': 'string'}
+        
+    def __unicode__(self):
+        return u'create time %s expire time %s' % (self.create_time, self.expire_time)
     
