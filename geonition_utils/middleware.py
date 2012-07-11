@@ -59,3 +59,18 @@ class RESTExceptionMiddleware(object):
     """
     def process_exception(self, request, exception):
         return HttpResponseBadRequest(exception.message)
+        
+
+class IEEdgeMiddleware(object):
+    """
+    This middleware sets header for IE to address the issue
+    of the html meta tag not always working for the case of:
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    """
+    def process_response(self, request, response):
+        
+        if 'MSIE' in  request.META['USER_AGENT']:
+            response['X-UA-Compatible'] = "IE=Edge,chrome=1"
+        
+        return response
+
