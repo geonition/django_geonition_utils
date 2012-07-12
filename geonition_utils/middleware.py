@@ -69,7 +69,7 @@ class IEEdgeMiddleware(object):
     """
     def process_response(self, request, response):
         
-        if 'MSIE' in  request.META['USER_AGENT']:
+        if 'MSIE' in  request.META.get('HTTP_USER_AGENT',''):
             response['X-UA-Compatible'] = "IE=Edge,chrome=1"
         
         return response
