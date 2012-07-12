@@ -4,10 +4,9 @@ This file makes sure that the utils work correctly
 from django.test import TestCase
 from django.conf import settings
 from django.utils import simplejson as json
-from django.contrib.auth.models import User
+from django.utils import timezone
 from models import JSON
 from models import TimeD
-from datetime import datetime
 
 class UtilsTest(TestCase):
     """
@@ -162,13 +161,13 @@ class UtilsTest(TestCase):
                           "result")       
         
     def test_timed_model(self):
-        before_create_time = datetime.today()
+        before_create_time = timezone.now()
         time = TimeD()
         time.save()
-        valid_time = datetime.today()
+        valid_time = timezone.now()
         time.expire()
         time.save()
-        after_expire_time = datetime.today()
+        after_expire_time = timezone.now()
         
         self.assertFalse(time.valid(before_create_time))
         self.assertTrue(time.valid(valid_time))

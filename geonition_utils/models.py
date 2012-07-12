@@ -1,12 +1,10 @@
-from datetime import datetime
 from django.db import models
 from django.conf import settings
 from django.utils import simplejson as json
+from django.utils import timezone
 from geonition_utils.json import get_value_types
 from manager import MongoDBManager
-
-import types
-    
+  
 class JSON(models.Model):
     """
     This model provides mongodb extensions
@@ -42,7 +40,7 @@ class JSON(models.Model):
         """
         return json.loads(self.json_string)
      
-    #TODO change the name of this function to something more descriptive
+    # TODO change the name of this function to something more descriptive
     # get conflicts with model get function
     def get(self, key, default=None):
         try:
@@ -96,7 +94,7 @@ class TimeD(models.Model):
     expire_time = models.DateTimeField(null=True)
     
     def expire(self):
-        self.expire_time = datetime.today()
+        self.expire_time = timezone.now()
         self.save()
     
     def valid(self, time):
@@ -117,5 +115,6 @@ class TimeD(models.Model):
                 'time.expire_time': 'string'}
         
     def __unicode__(self):
-        return u'create time %s expire time %s' % (self.create_time, self.expire_time)
+        return u'create time %s expire time %s' % (self.create_time,
+                                                   self.expire_time)
     
